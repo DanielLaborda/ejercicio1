@@ -31,6 +31,10 @@ export default class App extends Component {
       })
       if(line1.length == 3) {
         if (line1[0] >= 2 && line1[0] <= 50 && line1[1] >= 2 && line1[1] <= 50 && line1[2] >= 3 && line1[2] <= 5000) {
+          //Comprobamos que los numeros coinciden con las instrucciones
+          if (line1[0]!= lines[1].length) fileCorrupt = true;
+          if (line1[1]!= lines[2].length) fileCorrupt = true;
+          if (line1[2]!= lines[3].length) fileCorrupt = true;
           //el fichero será correcto
         } else fileCorrupt = true;
       } else fileCorrupt = true;
