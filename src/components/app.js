@@ -6,7 +6,8 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      message: ""
+      message: "",
+      namefile: ""
     }
     this.createFile = this.createFile.bind(this);
     this.readFile = this.readFile.bind(this);
@@ -85,13 +86,16 @@ export default class App extends Component {
     const file = e.target.files[0];
     if ( !file ) return;
 
+    const nameFile = e.target.files[0].name;
+
     const fileReader = new FileReader();
 
     fileReader.readAsText( file );
 
     fileReader.onload = () => {
       this.setState({
-        message:fileReader.result
+        message:fileReader.result,
+        namefile:nameFile
       });
     }
 
@@ -102,15 +106,27 @@ export default class App extends Component {
   render() {
     return (
       <div className='app'>
-        <h1>Inserte Mensaje</h1>
+        <div className='header'>
+          <i className="fas fa-user-secret icon"></i>
+          <h1 className='titulo'>Inserte Mensaje</h1>
+        </div>
+        
         <br/>
-        <input 
-          type="file" 
-          multiple={false}
-          onChange={ this.readFile }
-        />
+        <div className='import'>
+          <input 
+            type='file'
+            id='fileinput'
+            className='inputfile'
+            multiple={false}
+            onChange={ this.readFile }
+          />
+          <label htmlFor='fileinput' className='labelInputFile'><i className="fas fa-file-upload"></i></label>
+          <span className='nameFileSpan'>{this.state.namefile}</span>
+        </div>
+        
         <br/>
         <button
+          className='buttonDecoding'
           onClick={ this.decodingFile }
         >
           Respuesta
