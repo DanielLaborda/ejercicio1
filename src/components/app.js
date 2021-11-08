@@ -20,46 +20,64 @@ export default class App extends Component {
     let fileCorrupt = false ;
     //leeremos el mensaje 
     //nos aseguramos que tiene 4 lineas y los datos posibles
-    //
     this.state.message.split('\r\n').map((i) => {
       lines.push(String(i));
     });
-    
-    if(lines.length == 4) {
-      const line1 = [];
-      lines[0].split(' ').map((number) => {
-        line1.push(parseInt(number));
-      })
-      if(line1.length == 3) {
-        if (line1[0] >= 2 && line1[0] <= 50 && line1[1] >= 2 && line1[1] <= 50 && line1[2] >= 3 && line1[2] <= 5000) {
-          //Comprobamos que los numeros coinciden con las instrucciones
-          if (line1[0]!= lines[1].length) fileCorrupt = true;
-          if (line1[1]!= lines[2].length) fileCorrupt = true;
-          if (line1[2]!= lines[3].length) fileCorrupt = true;
-          //el fichero será correcto
-        } else fileCorrupt = true;
-      } else fileCorrupt = true;
-    } 
-    else fileCorrupt = true;
-    
-    if (fileCorrupt == false) {
-      //se desencripta el mensaje
-      const mensaje = this.RemoveRepeatCharapters(lines[3]);
-      //busqueda primer mensaje
-      let firstValue, secondValue;
-      if (mensaje.indexOf(lines[1]) >= 0) {
-        firstValue ="SI";
-      } else {
-        firstValue = "NO";
-      }
-      //busqueda segundo mensaje
-      if (mensaje.indexOf(lines[2]) >= 0) {
-        secondValue ="SI";
-      } else {
-        secondValue = "NO";
-      }
 
-      this.createFile(firstValue, secondValue);
+    
+    const line1 = [];
+    lines[0].split(' ').map((number) => {
+      line1.push(number);
+    });
+
+    const regex = /^[0-9]*$/;
+    let onlyNumbersLine1 = true;
+    let i = 0;
+
+    while (line1[i]) {
+      console.log('intento:' + i + ' Resultado:' + line1[i]);
+      onlyNumbersLine1 = regex.test(line1[i]);
+      if(!onlyNumbersLine1){
+        break;
+      }
+      i++;
+    }
+    
+    
+    if (onlyNumbersLine1) {
+      if (line1[0] >= 2 && line1[0] <= 50 && line1[1] >= 2 && line1[1] <= 50 && line1[2] >= 3 && line1[2] <= 5000) {
+        //Comprobamos que los numeros coinciden con las instrucciones
+        if (line1[0]!= lines[1].length) fileCorrupt = true;
+        if (line1[1]!= lines[2].length) fileCorrupt = true;
+        if (line1[2]!= lines[3].length) fileCorrupt = true;
+      } else fileCorrupt = true;
+    } else fileCorrupt = true;
+    
+    //Comprobamos que los que el mensaje tenga los caracteres correctos
+    const regexMessage = /[^a-zA-Z0-9]/;
+    let charIncorrec = true;
+    charIncorrec = regexMessage.test(lines[3]);
+    if (charIncorrec) fileCorrupt = true;
+
+    if (fileCorrupt == false) {
+
+    //se desencripta el mensaje
+    const mensaje = this.RemoveRepeatCharapters(lines[3]);
+    //busqueda primer mensaje
+    let firstValue, secondValue;
+    if (mensaje.indexOf(lines[1]) >= 0) {
+      firstValue ="SI";
+    } else {
+      firstValue = "NO";
+    }
+    //busqueda segundo mensaje
+    if (mensaje.indexOf(lines[2]) >= 0) {
+      secondValue ="SI";
+    } else {
+      secondValue = "NO";
+    }
+
+    this.createFile(firstValue, secondValue);
     } 
     else alert("Fichero equivocado \r\n O estás en la pagina EQUIVOCADA!!! 0.0");
   }
