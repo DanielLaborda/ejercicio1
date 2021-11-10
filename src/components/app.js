@@ -18,6 +18,7 @@ export default class App extends Component {
   decodingFile() {
     const lines = [];
     let fileCorrupt = false ;
+    let errorFile = '';
     //leeremos el mensaje 
     //nos aseguramos que tiene 4 lineas y los datos posibles
     this.state.message.split('\r\n').map((i) => {
@@ -47,17 +48,35 @@ export default class App extends Component {
     if (onlyNumbersLine1) {
       if (line1[0] >= 2 && line1[0] <= 50 && line1[1] >= 2 && line1[1] <= 50 && line1[2] >= 3 && line1[2] <= 5000) {
         //Comprobamos que los numeros coinciden con las instrucciones
-        if (line1[0]!= lines[1].length) fileCorrupt = true;
-        if (line1[1]!= lines[2].length) fileCorrupt = true;
-        if (line1[2]!= lines[3].length) fileCorrupt = true;
-      } else fileCorrupt = true;
-    } else fileCorrupt = true;
+        if (line1[0]!= lines[1].length) {
+          fileCorrupt = true;
+          errorFile = 'El primer valor no coincide con la instruccion';
+        }
+        if (line1[1]!= lines[2].length) {
+          fileCorrupt = true;
+          errorFile = 'El segundo valor no coincide con la instruccion';
+        }
+        if (line1[2]!= lines[3].length) {
+          fileCorrupt = true;
+          errorFile = 'El tercer valor no coincide con la instruccion';
+        }
+      } else { 
+        fileCorrupt = true;
+        errorFile = 'Solo se permiten numeros entre los rangos establecidos';
+      }
+    } else {
+      fileCorrupt = true;
+      errorFile = 'Solo se permiten numeros enteros en la primera linea';
+    }
     
     //Comprobamos que los que el mensaje tenga los caracteres correctos
     const regexMessage = /[^a-zA-Z0-9]/;
     let charIncorrec = true;
     charIncorrec = regexMessage.test(lines[3]);
-    if (charIncorrec) fileCorrupt = true;
+    if (charIncorrec) {
+      fileCorrupt = true;
+      errorFile = 'El mensaje tiene caracteres incorrectos';
+    }
 
     if (fileCorrupt == false) {
 
@@ -79,7 +98,7 @@ export default class App extends Component {
 
     this.createFile(firstValue, secondValue);
     } 
-    else alert("Fichero equivocado \r\n O estás en la pagina EQUIVOCADA!!! 0.0");
+    else alert(errorFile);
   }
   createFile(fvalue, svalue) {
       const blob = new Blob([ fvalue, "\n",svalue ], {type: 'text/plain;charset=utf-8'});
