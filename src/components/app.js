@@ -19,17 +19,25 @@ export default class App extends Component {
     const lines = [];
     let fileCorrupt = false ;
     let errorFile = '';
+    let l = '';
     //leeremos el mensaje 
     //nos aseguramos que tiene 4 lineas y los datos posibles
-    this.state.message.split('\r\n').map((i) => {
-      lines.push(String(i));
+    this.state.message.split('\n').map((i) => {
+      if (i.indexOf('\r') >= 0) {
+        // si tiene este caracter lo reemplazaremos y borrraremos
+        l = i.replace('\r','');
+        lines.push(String(l));
+      } else {
+        lines.push(String(i));
+      }
+      
     });
-
     
     const line1 = [];
     lines[0].split(' ').map((number) => {
       line1.push(number);
     });
+    
 
     const regex = /^[0-9]*$/;
     let onlyNumbersLine1 = true;
@@ -129,6 +137,7 @@ export default class App extends Component {
 
     fileReader.readAsText( file );
 
+    
     fileReader.onload = () => {
       this.setState({
         message:fileReader.result,
