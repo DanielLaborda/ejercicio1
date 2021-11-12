@@ -22,6 +22,7 @@ export default class App extends Component {
     let l = '';
     //leeremos el mensaje 
     //nos aseguramos que tiene 4 lineas y los datos posibles
+    
     this.state.message.split('\n').map((i) => {
       if (i.indexOf('\r') >= 0) {
         // si tiene este caracter lo reemplazaremos y borrraremos
@@ -32,7 +33,6 @@ export default class App extends Component {
       }
       
     });
-    
     const line1 = [];
     lines[0].split(' ').map((number) => {
       line1.push(number);
@@ -44,7 +44,6 @@ export default class App extends Component {
     let i = 0;
 
     while (line1[i]) {
-      console.log('intento:' + i + ' Resultado:' + line1[i]);
       onlyNumbersLine1 = regex.test(line1[i]);
       if(!onlyNumbersLine1){
         break;
